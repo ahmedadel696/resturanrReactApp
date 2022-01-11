@@ -1,4 +1,5 @@
-import { Card, CardImg, CardText, CardBody, CardTitle } from 'reactstrap'
+import { Link } from 'react-router-dom';
+import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem } from 'reactstrap'
 
 
 function RenderDish({ dish }) {
@@ -21,7 +22,7 @@ function RenderDish({ dish }) {
     }
 }
 
-function RenderComments({commentsArr }) {
+function RenderComments({ commentsArr }) {
     if (commentsArr != null) {
         return (
             <div className='col-12 col-md-5 mt-1'>
@@ -49,12 +50,27 @@ function RenderComments({commentsArr }) {
 
 const DishdetailComponent = (props) => {
 
+
+    console.log(props.comments);
     return (
         <div className='container'>
             <div className='row'>
+                <Breadcrumb>
+                    <BreadcrumbItem><Link to='/home'>Home</Link></BreadcrumbItem>
+                    <BreadcrumbItem active>{props.singleDish.name}</BreadcrumbItem>
+
+                    <BreadcrumbItem>Menu</BreadcrumbItem>
+                </Breadcrumb>
+                <div className="col-12">
+                    <h3>{props.singleDish.name}</h3>
+                    <hr />
+                </div>
+            </div>
+
+            <div className='row'>
                 <RenderDish dish={props.singleDish} />
                 {props.singleDish !== undefined ?
-                    <RenderComments commentsArr={props.singleDish.comments} /> :
+                    <RenderComments commentsArr={props.comments} /> :
                     <div></div>
                 }
             </div>
@@ -65,21 +81,6 @@ const DishdetailComponent = (props) => {
 
 
 
-    // const dish = props.singleDish;
-
-    // return (
-    //     <div className='container'>
-
-
-    //         <div className='row'>
-    //             {renderDish(dish)}
-    //             {renderComments(dish.comments)}
-
-    //         </div>
-    //     </div>
-
-
-    // )
 
 
 }

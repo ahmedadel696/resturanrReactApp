@@ -41,12 +41,25 @@ class Main extends Component {
              />
       );
     }
+
+    const RenderDishDetailComponent =({match})=>{
+      return(
+        <DishdetailComponent 
+        singleDish={this.state.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]} 
+        comments={this.state.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))} />
+        )
+    }
+
+    
+
     return (
       <div>
         <HeaderComponent />
         <Switch>
           <Route path='/home' component={Home} />
           <Route exact path='/menu' component={() => <MenuComponent dishes={this.state.dishes} />} />
+          <Route  path='/menu/:dishId' component={RenderDishDetailComponent} />
+
           <Route exact path='/contactus' component={ContactComponent} />
           <Redirect to='/home' />
         </Switch>
