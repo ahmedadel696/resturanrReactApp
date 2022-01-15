@@ -12,6 +12,7 @@ import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import HomeComponent from './HomeComponent';
 import ContactComponent from './ContactComponent';
+import AboutComponent from './AboutComponent';
 
 class Main extends Component {
 
@@ -42,6 +43,14 @@ class Main extends Component {
       );
     }
 
+    const About = () => {
+      return(
+        <AboutComponent 
+              leaders={this.state.leaders}
+             />
+      );
+    }
+
     const RenderDishDetailComponent =({match})=>{
       return(
         <DishdetailComponent 
@@ -57,6 +66,8 @@ class Main extends Component {
         <HeaderComponent />
         <Switch>
           <Route path='/home' component={Home} />
+          <Route exact path='/aboutus' component={About} />
+
           <Route exact path='/menu' component={() => <MenuComponent dishes={this.state.dishes} />} />
           <Route  path='/menu/:dishId' component={RenderDishDetailComponent} />
 
