@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom';
-import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem, Button, Modal, ModalHeader, ModalBody , Label, Col, Row  } from 'reactstrap'
+import { Modal, ModalHeader, ModalBody, Button, Label, Col, Row } from 'reactstrap';
 import { LocalForm, Control, Errors } from 'react-redux-form';
+
+
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
 const minLength = (len) => (val) => val && (val.length >= len);
 
-
 class CommentForm extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -61,8 +62,8 @@ class CommentForm extends Component {
                             <Row className="form-group">
                                 <Label htmlFor="name" md={12}>Your Name</Label>
                                 <Col md={12}>
-                                    <Control.text model=".author" id="author" name="author"
-                                        placeholder="Your name"
+                                    <Control.text model=".name" id="name" name="name"
+                                        placeholder="First Name"
                                         className="form-control"
                                         validators={{
                                             required, minLength: minLength(3), maxLength: maxLength(15)
@@ -70,7 +71,7 @@ class CommentForm extends Component {
                                     />
                                     <Errors
                                         className="text-danger"
-                                        model=".author"
+                                        model=".name"
                                         show="touched"
                                         messages={{
                                             required: 'Required',
@@ -104,100 +105,4 @@ class CommentForm extends Component {
         )
     }
 }
-
-function RenderDish({ dish }) {
-    if (dish != null) {
-        return (
-            <div className='col-12 col-md-5 mt-1'>
-                <Card>
-                    <CardImg width="50%" height="50%" src={dish.image} alt={dish.name} />
-                    <CardBody>
-                        <CardTitle>{dish.name}</CardTitle>
-                        <CardText>{dish.description}</CardText>
-                    </CardBody>
-                </Card>
-            </div>
-        );
-    } else {
-        return (
-            <div></div>
-        );
-    }
-}
-
-function RenderComments({ commentsArr  }) {
-    if (commentsArr != null) {
-        return (
-            <div className='col-12 col-md-5 mt-1'>
-                <h4>Comments</h4>
-                {
-                    commentsArr.map((dishCom) => {
-                        return (
-                            <ul className='list-unstyled' key={dishCom.id} >
-                                <li>{dishCom.comment}</li>
-                                <li>--{dishCom.author} , {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(dishCom.date)))}</li>
-                            </ul>
-                        );
-                    })
-                }
-                <CommentForm />
-
-            </div>
-        );
-    } else {
-        return (
-            <div>
-            </div>
-        );
-    }
-
-}
-
-
-
-class DishdetailComponent extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            navFlagOpen: false,
-            ModalFlagOpen: false,
-        }
-
-    }
-
-
-
-
-    render() {
-        return (
-            <div className='container'>
-                <div className='row'>
-                    <Breadcrumb>
-                        <BreadcrumbItem><Link to='/home'>Home</Link></BreadcrumbItem>
-                        <BreadcrumbItem active>{this.props.singleDish.name}</BreadcrumbItem>
-
-                        <BreadcrumbItem>Menu</BreadcrumbItem>
-                    </Breadcrumb>
-                    <div className="col-12">
-                        <h3>{this.props.singleDish.name}</h3>
-                        <hr />
-                    </div>
-                </div>
-
-                <div className='row'>
-                    <RenderDish dish={this.props.singleDish} />
-                    {this.props.singleDish !== undefined ?
-                        <RenderComments flag={true} commentsArr={this.props.comments} /> :
-                        <div></div>
-                    }
-
-                </div>
-            </div>
-        );
-    }
-}
-
-
-
-export default DishdetailComponent;
+export default CommentForm;
