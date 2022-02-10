@@ -1,20 +1,40 @@
 import React from 'react';
 import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, Media } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { BASE_URL } from '../shared/base_url';
+import { Loading } from './LoadingComponent';
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
-function RenderLeader({ leaderInfo }) {
-    return (
-        <Media tag="li">
-            <Media left middle>
-                <Media object src={leaderInfo.image} alt={leaderInfo.name} />
-            </Media>
-            <Media body className="ml-5">
-                <Media heading>{leaderInfo.name}</Media>
-                <p>{leaderInfo.designation}</p>
-                <p>{leaderInfo.description}</p>
-            </Media>
-        </Media>
-    );
+function RenderLeader({ leaderInfo, isLoading, errMess }) {
+    if (isLoading) {
+        return (
+            <Loading />
+        );
+    }
+    else if (errMess) {
+        return (
+            <h4>{errMess}</h4>
+        );
+    } else {
+        return (
+            <Stagger in>
+                <Fade in>
+
+                    <Media tag="li">
+                        <Media left middle>
+                            <Media object src={BASE_URL + leaderInfo.image} alt={leaderInfo.name} />
+                        </Media>
+                        <Media body className="ml-5">
+                            <Media heading>{leaderInfo.name}</Media>
+                            <p>{leaderInfo.designation}</p>
+                            <p>{leaderInfo.description}</p>
+                        </Media>
+                    </Media>
+                </Fade>
+
+            </Stagger>
+        );
+    }
 }
 
 function AboutComponent(props) {
@@ -22,7 +42,7 @@ function AboutComponent(props) {
     const leaders = props.leaders.map((leader) => {
         return (
             <div key={leader.id}>
-                <RenderLeader leaderInfo={leader} />
+                <RenderLeader leaderInfo={leader} isLoading={props.leadersLoading} errMess={props.leadersErrMess} />
             </div>
         );
     });

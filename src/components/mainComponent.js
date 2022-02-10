@@ -14,14 +14,14 @@ import { connect } from 'react-redux';
 
 import { actions } from 'react-redux-form';
 
-import { postComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionCreator';
+import { postComment, fetchDishes,fetchLeaders, fetchComments, fetchPromos, postFeedback } from '../redux/ActionCreator';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 const mapStateToProps = state => {
   return {
     dishes: state.dishes,
     comments: state.comments,
     promotions: state.promotions,
-    leaders: state.leaders
+    leaders: state.leaders,
 
   }
 }
@@ -31,7 +31,9 @@ const mapDispatchToProps = dispatch => ({
   postComment: (dishId, rating, author, comment) => dispatch(postComment(dishId, rating, author, comment)),
   fetchDishes: () => { dispatch(fetchDishes()) },
   fetchPromos: () => { dispatch(fetchPromos()) },
+  fetchLeaders: () => { dispatch(fetchLeaders()) },
   fetchComments: () => { dispatch(fetchComments()) },
+  postFeedback: (firstname, lastname, telnum, email, agree, contactType, message) => dispatch(postFeedback(firstname, lastname, telnum, email, agree, contactType, message)),
   resetFeedbackForm: () => { dispatch(actions.reset('feedback')) }
 
 });
@@ -47,6 +49,7 @@ class Main extends Component {
     this.props.fetchPromos();
     this.props.fetchDishes();
     this.props.fetchComments();
+    this.props.fetchLeaders();
   }
 
   render() {
@@ -60,7 +63,9 @@ class Main extends Component {
           promotion={this.props.promotions.promotions.filter((promo) => promo.featured)[0]}
           promotionsLoading={this.props.promotions.isLoading}
           promotionsErrMess={this.props.promotions.errMess}
-          leader={this.props.leaders.filter((leader) => leader.featured)[0]}
+          leader={this.props.leaders.leaders.filter((leader) => leader.featured)[0]}
+          leadersLoading={this.props.leaders.isLoading}
+          leadersErrMess={this.props.leaders.errMess}
         />
       );
     }
@@ -68,7 +73,9 @@ class Main extends Component {
     const About = () => {
       return (
         <AboutComponent
-          leaders={this.props.leaders}
+          leaders={this.props.leaders.leaders}
+          leadersLoading={this.props.leaders.isLoading}
+          leadersErrMess={this.props.leaders.errMess}
         />
       );
     }
@@ -100,7 +107,7 @@ class Main extends Component {
               <Route exact path='/menu' component={() => <MenuComponent dishes={this.props.dishes} />} />
               <Route path='/menu/:dishId' component={RenderDishDetailComponent} />
 
-              <Route exact path='/contactus' component={() => <ContactComponent resetFeedbackForm={this.props.resetFeedbackForm} />} />
+              <Route exact path='/contactus' component={() => <ContactComponent resetFeedbackForm={this.props.resetFeedbackForm} postFeedback={this.props.postFeedback} />} />
               <Redirect to='/home' />
             </Switch>
           </CSSTransition>
