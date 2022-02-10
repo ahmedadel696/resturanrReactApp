@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
-import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem, Button, Modal, ModalHeader, ModalBody , Label, Col, Row  } from 'reactstrap'
+import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem, Button, Modal, ModalHeader, ModalBody, Label, Col, Row } from 'reactstrap'
 import { LocalForm, Control, Errors } from 'react-redux-form';
 import { Loading } from './LoadingComponent';
 import { BASE_URL } from '../shared/base_url';
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
+
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
 const minLength = (len) => (val) => val && (val.length >= len);
-
 
 class CommentForm extends Component {
     constructor(props) {
@@ -108,32 +109,38 @@ class CommentForm extends Component {
 function RenderDish({ dish }) {
 
     if (dish.isLoading) {
-        return(
+        return (
             <div className="container">
-                <div className="row">            
+                <div className="row">
                     <Loading />
                 </div>
             </div>
         );
     }
     else if (dish.errMess) {
-        return(
+        return (
             <div className="container">
-                <div className="row">            
+                <div className="row">
                     <h4>{dish.errMess}</h4>
                 </div>
             </div>
         );
-    }else if (dish != null) {
+    } else if (dish != null) {
         return (
             <div className='col-12 col-md-5 mt-1'>
-                <Card>
-                    <CardImg width="50%" height="50%" src={BASE_URL + dish.image} alt={dish.name} />
-                    <CardBody>
-                        <CardTitle>{dish.name}</CardTitle>
-                        <CardText>{dish.description}</CardText>
-                    </CardBody>
-                </Card>
+                <FadeTransform in
+                    transformProps={{
+                        exitTransform: 'scale(0.5) translateY(-50%)'
+                    }}
+                >
+                    <Card>
+                        <CardImg width="50%" height="50%" src={BASE_URL + dish.image} alt={dish.name} />
+                        <CardBody>
+                            <CardTitle>{dish.name}</CardTitle>
+                            <CardText>{dish.description}</CardText>
+                        </CardBody>
+                    </Card>
+                </FadeTransform>
             </div>
         );
     } else {
@@ -143,21 +150,25 @@ function RenderDish({ dish }) {
     }
 }
 
-function RenderComments({ commentsArr, dishId , postComment  }) {
+function RenderComments({ commentsArr, dishId, postComment }) {
     if (commentsArr != null) {
         return (
             <div className='col-12 col-md-5 mt-1'>
                 <h4>Comments</h4>
-                {
-                    commentsArr.map((dishCom) => {
-                        return (
-                            <ul className='list-unstyled' key={dishCom.id} >
-                                <li>{dishCom.comment}</li>
-                                <li>--{dishCom.author} , {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(dishCom.date)))}</li>
-                            </ul>
-                        );
-                    })
-                }
+                <Stagger in>
+                    {
+                        commentsArr.map((dishCom) => {
+                            return (
+                                <Fade in>
+                                    <ul className='list-unstyled' key={dishCom.id} >
+                                        <li>{dishCom.comment}</li>
+                                        <li>--{dishCom.author} , {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(dishCom.date)))}</li>
+                                    </ul>
+                                </Fade>
+                            );
+                        })
+                    }
+                </Stagger>
                 <CommentForm dishId={dishId} postComment={postComment} />
 
             </div>
@@ -206,7 +217,7 @@ class DishdetailComponent extends Component {
                 <div className='row'>
                     <RenderDish dish={this.props.singleDish} />
                     {this.props.singleDish !== undefined ?
-                        <RenderComments commentsArr={this.props.comments} dishId={this.props.singleDish.id} postComment={this.props.postComment}/> :
+                        <RenderComments commentsArr={this.props.comments} dishId={this.props.singleDish.id} postComment={this.props.postComment} /> :
                         <div></div>
                     }
 

@@ -2,6 +2,7 @@ import { Card, CardBody, CardImg, CardSubtitle, CardText, CardTitle } from "reac
 import { Loading } from './LoadingComponent';
 
 import { BASE_URL } from "../shared/base_url";
+import { FadeTransform } from 'react-animation-components';
 
 function RenderCardItem({ item, isLoading, errMess }) {
     if (isLoading) {
@@ -16,6 +17,11 @@ function RenderCardItem({ item, isLoading, errMess }) {
     } else {
         console.log("promotion_item : ", item);
         return (
+            <FadeTransform in 
+            transformProps={{
+                exitTransform: 'scale(0.5) translateY(-50%)'
+            }}
+            >
             <Card>
                 <CardImg src={BASE_URL+item.image} alt={item.name} />
                 <CardBody>
@@ -26,6 +32,7 @@ function RenderCardItem({ item, isLoading, errMess }) {
                     </CardText>
                 </CardBody>
             </Card>
+            </FadeTransform>
         );
     }
 
